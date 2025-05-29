@@ -29,9 +29,50 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="mb-4">Controle de Estoque</h1>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Controle de Estoque</h1>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalProduto">
+                <i class="fas fa-plus"></i> Adicionar Produto
+            </button>
+        </div>
         
         <div class="row produtos-container">
+        </div>
+
+        <!-- Modal Adicionar Produto -->
+        <div class="modal fade" id="modalProduto" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Adicionar Novo Produto</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formProduto">
+                            <div class="mb-3">
+                                <label for="nome" class="form-label">Nome do Produto</label>
+                                <input type="text" class="form-control" id="nome" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="descricao" class="form-label">Descrição</label>
+                                <textarea class="form-control" id="descricao" rows="3" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="preco" class="form-label">Preço (R$)</label>
+                                <input type="number" class="form-control" id="preco" step="0.01" min="0" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="quantidade" class="form-label">Quantidade em Estoque</label>
+                                <input type="number" class="form-control" id="quantidade" min="0" required>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Salvar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

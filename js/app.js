@@ -1,4 +1,4 @@
-const produtos = [
+let produtos = [
     {
         nome: 'Notebook Premium',
         descricao: 'Notebook com processador Intel Core i7, 16GB RAM, 512GB SSD',
@@ -21,6 +21,41 @@ const produtos = [
         imagem: 'https://via.placeholder.com/400x200'
     }
 ];
+
+// Função para adicionar novo produto
+function adicionarProduto(event) {
+    event.preventDefault();
+    
+    const nome = document.getElementById('nome').value;
+    const descricao = document.getElementById('descricao').value;
+    const preco = parseFloat(document.getElementById('preco').value);
+    const quantidade = parseInt(document.getElementById('quantidade').value);
+    
+    // Adicionar novo produto ao array
+    produtos.push({
+        nome: nome,
+        descricao: descricao,
+        preco: preco,
+        quantidade: quantidade,
+        imagem: 'https://via.placeholder.com/400x200'
+    });
+    
+    // Atualizar a lista de produtos
+    atualizarProdutos();
+    
+    // Fechar modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('modalProduto'));
+    modal.hide();
+    
+    // Limpar formulário
+    document.getElementById('formProduto').reset();
+}
+
+// Adicionar evento ao formulário
+const formProduto = document.getElementById('formProduto');
+if (formProduto) {
+    formProduto.addEventListener('submit', adicionarProduto);
+}
 
 function formatarPreco(valor) {
     return new Intl.NumberFormat('pt-BR', {
@@ -50,6 +85,15 @@ function criarCard(produto) {
     `;
     
     return card;
+}
+
+// Função para atualizar a lista de produtos
+function atualizarProdutos() {
+    const container = document.querySelector('.produtos-container');
+    container.innerHTML = '';
+    produtos.forEach(produto => {
+        container.appendChild(criarCard(produto));
+    });
 }
 
 // Carregar produtos quando o DOM estiver pronto
