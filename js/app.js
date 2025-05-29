@@ -2,73 +2,95 @@ let produtos = [];
 
 // Função para carregar produtos do localStorage
 function carregarProdutos() {
-    const produtosSalvos = localStorage.getItem('produtos');
-    if (produtosSalvos) {
-        return JSON.parse(produtosSalvos);
+    try {
+        const produtosSalvos = localStorage.getItem('produtos');
+        if (produtosSalvos) {
+            return JSON.parse(produtosSalvos);
+        }
+        return [
+            'Notebook Premium',
+            'Smartphone Flagship',
+            'Tablet Pro'
+        ];
+    } catch (error) {
+        console.error('Erro ao carregar produtos:', error);
+        return [];
     }
-    return [
-        'Notebook Premium',
-        'Smartphone Flagship',
-        'Tablet Pro'
-    ];
+}
+
+// Função para salvar produtos no localStorage
+function salvarProdutos() {
+    try {
+        localStorage.setItem('produtos', JSON.stringify(produtos));
+    } catch (error) {
+        console.error('Erro ao salvar produtos:', error);
+    }
 }
 
 // Carregar produtos quando o DOM estiver pronto
 document.addEventListener('DOMContentLoaded', () => {
-    // Carregar produtos
-    produtos = carregarProdutos();
-    
-    // Adicionar evento ao formulário
-    const formProduto = document.getElementById('formProduto');
-    if (formProduto) {
-        formProduto.addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            // Pegar nome do produto
-            const nome = document.getElementById('nome').value;
-            
-            // Adicionar ao array de produtos
-            produtos.push(nome);
-            
-            // Salvar no localStorage
-            localStorage.setItem('produtos', JSON.stringify(produtos));
-            
-            // Atualizar a lista de produtos
-            atualizarProdutos();
-            
-            // Fechar modal
-            const modal = bootstrap.Modal.getInstance(document.getElementById('modalProduto'));
-            modal.hide();
-            
-            // Limpar formulário
-            formProduto.reset();
-        });
+    try {
+        // Carregar produtos
+        produtos = carregarProdutos();
+        
+        // Adicionar evento ao formulário
+        const formProduto = document.getElementById('formProduto');
+        if (formProduto) {
+            formProduto.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                // Pegar nome do produto
+                const nome = document.getElementById('nome').value;
+                
+                // Adicionar ao array de produtos
+                produtos.push(nome);
+                
+                // Salvar no localStorage
+                salvarProdutos();
+                
+                // Atualizar a lista de produtos
+                atualizarProdutos();
+                
+                // Fechar modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('modalProduto'));
+                modal.hide();
+                
+                // Limpar formulário
+                formProduto.reset();
+            });
+        }
+        
+        // Atualizar a lista de produtos inicialmente
+        atualizarProdutos();
+    } catch (error) {
+        console.error('Erro ao inicializar:', error);
     }
-    
-    // Atualizar a lista de produtos inicialmente
-    atualizarProdutos();
 });
 
 // Função para atualizar a lista de produtos
 function atualizarProdutos() {
-    const container = document.querySelector('.produtos-container');
-    container.innerHTML = '';
-    
-    // Criar cards para cada produto
-    produtos.forEach(produto => {
-        const card = document.createElement('div');
-        card.className = 'col-md-4 mb-4';
+    try {
+        const container = document.querySelector('.produtos-container');
+        container.innerHTML = '';
         
-        card.innerHTML = `
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">${produto}</h5>
+        // Criar cards para cada produto
+        produtos.forEach(produto => {
+            const card = document.createElement('div');
+            card.className = 'col-md-4 mb-4';
+            
+            card.innerHTML = `
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">${produto}</h5>
+                    </div>
                 </div>
-            </div>
-        `;
-        
-        container.appendChild(card);
-    });
+            `;
+            
+            container.appendChild(card);
+        });
+    } catch (error) {
+        console.error('Erro ao atualizar produtos:', error);
+    }
 }
 
 // Adicionar evento de clique nos links de categoria
