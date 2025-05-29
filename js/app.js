@@ -1,4 +1,5 @@
 let produtos = [];
+let categoriaAtual = 'todos';
 
 // Função para carregar produtos do localStorage
 function carregarProdutos() {
@@ -32,6 +33,12 @@ function carregarProdutos() {
             categoria: 'tablet'
         }
     ];
+}
+
+// Função para filtrar produtos por categoria
+function filtrarProdutos(categoria) {
+    categoriaAtual = categoria;
+    atualizarProdutos();
 }
 
 // Carregar produtos quando o DOM estiver pronto
@@ -92,9 +99,37 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
+    // Adicionar evento de clique nas categorias
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Remover classe active de todos os links
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            // Adicionar classe active ao link clicado
+            this.classList.add('active');
+            // Filtrar produtos
+            filtrarProdutos(this.dataset.categoria);
+        });
+    });
+    
     // Atualizar a lista de produtos inicialmente
     atualizarProdutos();
 });
+
+// Função para atualizar a lista de produtos
+function atualizarProdutos() {
+    const container = document.querySelector('.produtos-container');
+    container.innerHTML = '';
+    
+    // Filtrar produtos com base na categoria atual
+    const produtosFiltrados = categoriaAtual === 'todos' 
+        ? produtos 
+        : produtos.filter(p => p.categoria === categoriaAtual);
+    
+    produtosFiltrados.forEach(produto => {
+        container.appendChild(criarCard(produto));
+    });
+}
 
 // Função para excluir produto
 function excluirProduto(produto) {
