@@ -1,91 +1,92 @@
-function carregarProdutos() {
-    const produtosSalvos = localStorage.getItem('produtos');
-    if (produtosSalvos) {
-        return JSON.parse(produtosSalvos);
-    }
-    return [
-        {
-            nome: 'Notebook Premium',
-            descricao: 'Notebook com processador Intel Core i7, 16GB RAM, 512GB SSD',
-            preco: 4999.99,
-            quantidade: 10,
-            imagem: 'https://via.placeholder.com/400x200',
-            categoria: 'informatica'
-        },
-        {
-            nome: 'Smartphone Flagship',
-            descricao: 'Smartphone com tela AMOLED 6.7", 12GB RAM, 256GB',
-            preco: 2999.99,
-            quantidade: 5,
-            imagem: 'https://via.placeholder.com/400x200',
-            categoria: 'celular'
-        },
-        {
-            nome: 'Tablet Pro',
-            descricao: 'Tablet com tela 12.9", processador M1, 8GB RAM',
-            preco: 3499.99,
-            quantidade: 8,
-            imagem: 'https://via.placeholder.com/400x200',
-            categoria: 'tablet'
-        }
-    ];
-}
-
-function salvarProdutos() {
-    localStorage.setItem('produtos', JSON.stringify(produtos));
-}
+let produtos = [];
 
 // Carregar produtos quando o DOM estiver pronto
 document.addEventListener('DOMContentLoaded', () => {
-    produtos = carregarProdutos();
-    atualizarProdutos();
-});
-
-let produtos = carregarProdutos();
-
-// Função para adicionar novo produto
-function adicionarProduto(event) {
-    event.preventDefault();
-    
-    const nome = document.getElementById('nome').value;
-    const descricao = document.getElementById('descricao').value;
-    const preco = parseFloat(document.getElementById('preco').value);
-    const quantidade = parseInt(document.getElementById('quantidade').value);
-    const categoria = document.getElementById('categoria').value;
-    const imagemInput = document.getElementById('imagem');
-    let imagem = 'https://via.placeholder.com/400x200';
-
-    // Se houver imagem selecionada, usar a URL da imagem
-    if (imagemInput.files.length > 0) {
-        imagem = URL.createObjectURL(imagemInput.files[0]);
+    // Carregar produtos do localStorage
+    const produtosSalvos = localStorage.getItem('produtos');
+    if (produtosSalvos) {
+        produtos = JSON.parse(produtosSalvos);
+    } else {
+        produtos = [
+            {
+                nome: 'Notebook Premium',
+                descricao: 'Notebook com processador Intel Core i7, 16GB RAM, 512GB SSD',
+                preco: 4999.99,
+                quantidade: 10,
+                imagem: 'https://via.placeholder.com/400x200',
+                categoria: 'informatica'
+            },
+            {
+                nome: 'Smartphone Flagship',
+                descricao: 'Smartphone com tela AMOLED 6.7", 12GB RAM, 256GB',
+                preco: 2999.99,
+                quantidade: 5,
+                imagem: 'https://via.placeholder.com/400x200',
+                categoria: 'celular'
+            },
+            {
+                nome: 'Tablet Pro',
+                descricao: 'Tablet com tela 12.9", processador M1, 8GB RAM',
+                preco: 3499.99,
+                quantidade: 8,
+                imagem: 'https://via.placeholder.com/400x200',
+                categoria: 'tablet'
+            }
+        ];
+        // Salvar os produtos iniciais
+        localStorage.setItem('produtos', JSON.stringify(produtos));
     }
     
-    // Adicionar novo produto ao array
-    const novoProduto = {
-        nome: nome,
-        descricao: descricao,
-        preco: preco,
-        quantidade: quantidade,
-        imagem: imagem,
-        categoria: categoria
-    };
-    produtos.push(novoProduto);
+    // Adicionar evento ao formulário
+    const formProduto = document.getElementById('formProduto');
+    if (formProduto) {
+        formProduto.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const nome = document.getElementById('nome').value;
+            const descricao = document.getElementById('descricao').value;
+            const preco = parseFloat(document.getElementById('preco').value);
+            const quantidade = parseInt(document.getElementById('quantidade').value);
+            const categoria = document.getElementById('categoria').value;
+            const imagemInput = document.getElementById('imagem');
+            let imagem = 'https://via.placeholder.com/400x200';
+
+            // Se houver imagem selecionada, usar a URL da imagem
+            if (imagemInput.files.length > 0) {
+                imagem = URL.createObjectURL(imagemInput.files[0]);
+            }
+            
+            // Adicionar novo produto ao array
+            const novoProduto = {
+                nome: nome,
+                descricao: descricao,
+                preco: preco,
+                quantidade: quantidade,
+                imagem: imagem,
+                categoria: categoria
+            };
+            produtos.push(novoProduto);
+            
+            // Salvar produtos no localStorage
+            localStorage.setItem('produtos', JSON.stringify(produtos));
+            
+            // Atualizar a lista de produtos
+            atualizarProdutos();
+            
+            // Fechar modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('modalProduto'));
+            modal.hide();
+            
+            // Limpar formulário
+            formProduto.reset();
+            // Limpar a URL da imagem
+            URL.revokeObjectURL(imagem);
+        });
+    }
     
-    // Salvar produtos no localStorage
-    salvarProdutos();
-    
-    // Atualizar a lista de produtos
+    // Atualizar a lista de produtos inicialmente
     atualizarProdutos();
-    
-    // Fechar modal
-    const modal = bootstrap.Modal.getInstance(document.getElementById('modalProduto'));
-    modal.hide();
-    
-    // Limpar formulário
-    document.getElementById('formProduto').reset();
-    // Limpar a URL da imagem
-    URL.revokeObjectURL(imagem);
-}
+});
 
 // Função para excluir produto
 function excluirProduto(produto) {
@@ -96,82 +97,23 @@ function excluirProduto(produto) {
             produtos.splice(index, 1);
         }
         // Salvar produtos no localStorage
-        salvarProdutos();
+        localStorage.setItem('produtos', JSON.stringify(produtos));
         // Atualizar a lista
         atualizarProdutos();
     }
 }
 
-// Adicionar campo de categoria no formulário de adicionar produto
-const formProduto = document.getElementById('formProduto');
-if (formProduto) {
-    const categoriaField = `
-        <div class="mb-3">
-            <label for="categoria" class="form-label">Categoria</label>
-            <select class="form-control" id="categoria" required>
-                <option value="eletronico">Eletrônicos</option>
-                <option value="informatica">Informática</option>
-                <option value="celular">Celulares</option>
-                <option value="tablet">Tablets</option>
-            </select>
-        </div>
-    `;
+// Função para atualizar a lista de produtos
+function atualizarProdutos() {
+    const container = document.querySelector('.produtos-container');
+    container.innerHTML = '';
     
-    // Inserir campo de categoria antes do botão salvar
-    const submitButton = formProduto.querySelector('.modal-footer button[type="submit"]');
-    submitButton.parentElement.insertAdjacentHTML('beforebegin', categoriaField);
+    produtos.forEach(produto => {
+        container.appendChild(criarCard(produto));
+    });
 }
 
-// Função para adicionar novo produto
-function adicionarProduto(event) {
-    event.preventDefault();
-    
-    const nome = document.getElementById('nome').value;
-    const descricao = document.getElementById('descricao').value;
-    const preco = parseFloat(document.getElementById('preco').value);
-    const quantidade = parseInt(document.getElementById('quantidade').value);
-    const categoria = document.getElementById('categoria').value;
-    const imagemInput = document.getElementById('imagem');
-    let imagem = 'https://via.placeholder.com/400x200';
-
-    // Se houver imagem selecionada, usar a URL da imagem
-    if (imagemInput.files.length > 0) {
-        imagem = URL.createObjectURL(imagemInput.files[0]);
-    }
-    
-    // Adicionar novo produto ao array
-    const novoProduto = {
-        nome: nome,
-        descricao: descricao,
-        preco: preco,
-        quantidade: quantidade,
-        imagem: imagem,
-        categoria: categoria
-    };
-    produtos.push(novoProduto);
-    
-    // Atualizar a lista de produtos
-    atualizarProdutos();
-    
-    // Fechar modal
-    const modal = bootstrap.Modal.getInstance(document.getElementById('modalProduto'));
-    modal.hide();
-    
-    // Limpar formulário
-    document.getElementById('formProduto').reset();
-    // Limpar a URL da imagem
-    URL.revokeObjectURL(imagem);
-}
-
-// Adicionar evento ao formulário
-document.getElementById('formProduto').addEventListener('submit', adicionarProduto);
-
-function formatarPreco(valor) {
-    return new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL'
-    }).format(valor);
-}
+// Função para criar card de produto
 
 function criarCard(produto) {
     const card = document.createElement('div');
