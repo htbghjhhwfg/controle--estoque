@@ -26,7 +26,6 @@ let produtos = [
 ];
 
 // Adicionar campo de categoria no formulário de adicionar produto
-// Adicionar campo de categoria no formulário de adicionar produto
 const formProduto = document.getElementById('formProduto');
 if (formProduto) {
     const categoriaField = `
@@ -55,16 +54,24 @@ function adicionarProduto(event) {
     const preco = parseFloat(document.getElementById('preco').value);
     const quantidade = parseInt(document.getElementById('quantidade').value);
     const categoria = document.getElementById('categoria').value;
+    const imagemInput = document.getElementById('imagem');
+    let imagem = 'https://via.placeholder.com/400x200';
+
+    // Se houver imagem selecionada, usar a URL da imagem
+    if (imagemInput.files.length > 0) {
+        imagem = URL.createObjectURL(imagemInput.files[0]);
+    }
     
     // Adicionar novo produto ao array
-    produtos.push({
+    const novoProduto = {
         nome: nome,
         descricao: descricao,
         preco: preco,
         quantidade: quantidade,
-        imagem: 'https://via.placeholder.com/400x200',
+        imagem: imagem,
         categoria: categoria
-    });
+    };
+    produtos.push(novoProduto);
     
     // Atualizar a lista de produtos
     atualizarProdutos();
@@ -75,38 +82,12 @@ function adicionarProduto(event) {
     
     // Limpar formulário
     document.getElementById('formProduto').reset();
-}
-    
-    const nome = document.getElementById('nome').value;
-    const descricao = document.getElementById('descricao').value;
-    const preco = parseFloat(document.getElementById('preco').value);
-    const quantidade = parseInt(document.getElementById('quantidade').value);
-    
-    // Adicionar novo produto ao array
-    produtos.push({
-        nome: nome,
-        descricao: descricao,
-        preco: preco,
-        quantidade: quantidade,
-        imagem: 'https://via.placeholder.com/400x200'
-    });
-    
-    // Atualizar a lista de produtos
-    atualizarProdutos();
-    
-    // Fechar modal
-    const modal = bootstrap.Modal.getInstance(document.getElementById('modalProduto'));
-    modal.hide();
-    
-    // Limpar formulário
-    document.getElementById('formProduto').reset();
+    // Limpar a URL da imagem
+    URL.revokeObjectURL(imagem);
 }
 
 // Adicionar evento ao formulário
-const formProduto = document.getElementById('formProduto');
-if (formProduto) {
-    formProduto.addEventListener('submit', adicionarProduto);
-}
+document.getElementById('formProduto').addEventListener('submit', adicionarProduto);
 
 function formatarPreco(valor) {
     return new Intl.NumberFormat('pt-BR', {
