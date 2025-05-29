@@ -1,29 +1,106 @@
-let produtos = [
-    {
-        nome: 'Notebook Premium',
-        descricao: 'Notebook com processador Intel Core i7, 16GB RAM, 512GB SSD',
-        preco: 4999.99,
-        quantidade: 10,
-        imagem: 'https://via.placeholder.com/400x200',
-        categoria: 'informatica'
-    },
-    {
-        nome: 'Smartphone Flagship',
-        descricao: 'Smartphone com tela AMOLED 6.7", 12GB RAM, 256GB',
-        preco: 2999.99,
-        quantidade: 5,
-        imagem: 'https://via.placeholder.com/400x200',
-        categoria: 'celular'
-    },
-    {
-        nome: 'Tablet Pro',
-        descricao: 'Tablet com tela 12.9", processador M1, 8GB RAM',
-        preco: 3499.99,
-        quantidade: 8,
-        imagem: 'https://via.placeholder.com/400x200',
-        categoria: 'tablet'
+function carregarProdutos() {
+    const produtosSalvos = localStorage.getItem('produtos');
+    if (produtosSalvos) {
+        return JSON.parse(produtosSalvos);
     }
-];
+    return [
+        {
+            nome: 'Notebook Premium',
+            descricao: 'Notebook com processador Intel Core i7, 16GB RAM, 512GB SSD',
+            preco: 4999.99,
+            quantidade: 10,
+            imagem: 'https://via.placeholder.com/400x200',
+            categoria: 'informatica'
+        },
+        {
+            nome: 'Smartphone Flagship',
+            descricao: 'Smartphone com tela AMOLED 6.7", 12GB RAM, 256GB',
+            preco: 2999.99,
+            quantidade: 5,
+            imagem: 'https://via.placeholder.com/400x200',
+            categoria: 'celular'
+        },
+        {
+            nome: 'Tablet Pro',
+            descricao: 'Tablet com tela 12.9", processador M1, 8GB RAM',
+            preco: 3499.99,
+            quantidade: 8,
+            imagem: 'https://via.placeholder.com/400x200',
+            categoria: 'tablet'
+        }
+    ];
+}
+
+function salvarProdutos() {
+    localStorage.setItem('produtos', JSON.stringify(produtos));
+}
+
+// Carregar produtos quando o DOM estiver pronto
+document.addEventListener('DOMContentLoaded', () => {
+    produtos = carregarProdutos();
+    atualizarProdutos();
+});
+
+let produtos = carregarProdutos();
+
+// Função para adicionar novo produto
+function adicionarProduto(event) {
+    event.preventDefault();
+    
+    const nome = document.getElementById('nome').value;
+    const descricao = document.getElementById('descricao').value;
+    const preco = parseFloat(document.getElementById('preco').value);
+    const quantidade = parseInt(document.getElementById('quantidade').value);
+    const categoria = document.getElementById('categoria').value;
+    const imagemInput = document.getElementById('imagem');
+    let imagem = 'https://via.placeholder.com/400x200';
+
+    // Se houver imagem selecionada, usar a URL da imagem
+    if (imagemInput.files.length > 0) {
+        imagem = URL.createObjectURL(imagemInput.files[0]);
+    }
+    
+    // Adicionar novo produto ao array
+    const novoProduto = {
+        nome: nome,
+        descricao: descricao,
+        preco: preco,
+        quantidade: quantidade,
+        imagem: imagem,
+        categoria: categoria
+    };
+    produtos.push(novoProduto);
+    
+    // Salvar produtos no localStorage
+    salvarProdutos();
+    
+    // Atualizar a lista de produtos
+    atualizarProdutos();
+    
+    // Fechar modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('modalProduto'));
+    modal.hide();
+    
+    // Limpar formulário
+    document.getElementById('formProduto').reset();
+    // Limpar a URL da imagem
+    URL.revokeObjectURL(imagem);
+}
+
+// Função para excluir produto
+function excluirProduto(produto) {
+    if (confirm(`Tem certeza que deseja excluir o produto "${produto.nome}"?`)) {
+        // Remover o produto do array
+        const index = produtos.indexOf(produto);
+        if (index > -1) {
+            produtos.splice(index, 1);
+        }
+        // Salvar produtos no localStorage
+        salvarProdutos();
+        // Atualizar a lista
+        atualizarProdutos();
+    }
+}
 
 // Adicionar campo de categoria no formulário de adicionar produto
 const formProduto = document.getElementById('formProduto');
