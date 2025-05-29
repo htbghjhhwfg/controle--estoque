@@ -56,17 +56,6 @@
             </button>
         </div>
 
-        <!-- Menu de Categorias -->
-        <div class="mb-4">
-            <nav class="nav d-flex gap-3">
-                <a class="nav-link active" href="#" data-categoria="todos">Todos</a>
-                <a class="nav-link" href="#" data-categoria="eletronico">Eletrônicos</a>
-                <a class="nav-link" href="#" data-categoria="informatica">Informática</a>
-                <a class="nav-link" href="#" data-categoria="celular">Celulares</a>
-                <a class="nav-link" href="#" data-categoria="tablet">Tablets</a>
-            </nav>
-        </div>
-
         <div class="row produtos-container">
         </div>
 
@@ -83,31 +72,6 @@
                             <div class="mb-3">
                                 <label for="nome" class="form-label">Nome do Produto</label>
                                 <input type="text" class="form-control" id="nome" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="descricao" class="form-label">Descrição</label>
-                                <textarea class="form-control" id="descricao" rows="3" required></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="preco" class="form-label">Preço (R$)</label>
-                                <input type="number" class="form-control" id="preco" step="0.01" min="0" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="quantidade" class="form-label">Quantidade em Estoque</label>
-                                <input type="number" class="form-control" id="quantidade" min="0" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="categoria" class="form-label">Categoria</label>
-                                <select class="form-control" id="categoria" required>
-                                    <option value="eletronico">Eletrônicos</option>
-                                    <option value="informatica">Informática</option>
-                                    <option value="celular">Celulares</option>
-                                    <option value="tablet">Tablets</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="imagem" class="form-label">Imagem do Produto</label>
-                                <input type="file" class="form-control" id="imagem" accept="image/*">
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
