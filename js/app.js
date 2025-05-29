@@ -1,41 +1,43 @@
 let produtos = [];
 
-// Carregar produtos quando o DOM estiver pronto
-document.addEventListener('DOMContentLoaded', () => {
-    // Carregar produtos do localStorage
+// Função para carregar produtos do localStorage
+function carregarProdutos() {
     const produtosSalvos = localStorage.getItem('produtos');
     if (produtosSalvos) {
-        produtos = JSON.parse(produtosSalvos);
-    } else {
-        produtos = [
-            {
-                nome: 'Notebook Premium',
-                descricao: 'Notebook com processador Intel Core i7, 16GB RAM, 512GB SSD',
-                preco: 4999.99,
-                quantidade: 10,
-                imagem: 'https://via.placeholder.com/400x200',
-                categoria: 'informatica'
-            },
-            {
-                nome: 'Smartphone Flagship',
-                descricao: 'Smartphone com tela AMOLED 6.7", 12GB RAM, 256GB',
-                preco: 2999.99,
-                quantidade: 5,
-                imagem: 'https://via.placeholder.com/400x200',
-                categoria: 'celular'
-            },
-            {
-                nome: 'Tablet Pro',
-                descricao: 'Tablet com tela 12.9", processador M1, 8GB RAM',
-                preco: 3499.99,
-                quantidade: 8,
-                imagem: 'https://via.placeholder.com/400x200',
-                categoria: 'tablet'
-            }
-        ];
-        // Salvar os produtos iniciais
-        localStorage.setItem('produtos', JSON.stringify(produtos));
+        return JSON.parse(produtosSalvos);
     }
+    return [
+        {
+            nome: 'Notebook Premium',
+            descricao: 'Notebook com processador Intel Core i7, 16GB RAM, 512GB SSD',
+            preco: 4999.99,
+            quantidade: 10,
+            imagem: 'https://via.placeholder.com/400x200',
+            categoria: 'informatica'
+        },
+        {
+            nome: 'Smartphone Flagship',
+            descricao: 'Smartphone com tela AMOLED 6.7", 12GB RAM, 256GB',
+            preco: 2999.99,
+            quantidade: 5,
+            imagem: 'https://via.placeholder.com/400x200',
+            categoria: 'celular'
+        },
+        {
+            nome: 'Tablet Pro',
+            descricao: 'Tablet com tela 12.9", processador M1, 8GB RAM',
+            preco: 3499.99,
+            quantidade: 8,
+            imagem: 'https://via.placeholder.com/400x200',
+            categoria: 'tablet'
+        }
+    ];
+}
+
+// Carregar produtos quando o DOM estiver pronto
+document.addEventListener('DOMContentLoaded', () => {
+    // Carregar produtos
+    produtos = carregarProdutos();
     
     // Adicionar evento ao formulário
     const formProduto = document.getElementById('formProduto');
@@ -43,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         formProduto.addEventListener('submit', function(event) {
             event.preventDefault();
             
+            // Pegar valores do formulário
             const nome = document.getElementById('nome').value;
             const descricao = document.getElementById('descricao').value;
             const preco = parseFloat(document.getElementById('preco').value);
@@ -56,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 imagem = URL.createObjectURL(imagemInput.files[0]);
             }
             
-            // Adicionar novo produto ao array
+            // Criar novo produto
             const novoProduto = {
                 nome: nome,
                 descricao: descricao,
@@ -65,9 +68,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 imagem: imagem,
                 categoria: categoria
             };
+            
+            // Adicionar ao array de produtos
             produtos.push(novoProduto);
             
-            // Salvar produtos no localStorage
+            // Salvar no localStorage
             localStorage.setItem('produtos', JSON.stringify(produtos));
             
             // Atualizar a lista de produtos
@@ -79,8 +84,11 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Limpar formulário
             formProduto.reset();
-            // Limpar a URL da imagem
-            URL.revokeObjectURL(imagem);
+            
+            // Limpar URL da imagem
+            if (imagemInput.files.length > 0) {
+                URL.revokeObjectURL(imagem);
+            }
         });
     }
     
